@@ -7,7 +7,6 @@ from django.conf import settings
 from trees.models import Tree
 # THIS BELOW IS A PACKAGE THAT CONTAINS A FUNCTION THAT
 # I MANUALLY CREATE TO COMPRESS Images
-from utilities.compressor import compress
 
 User = settings.AUTH_USER_MODEL
 
@@ -25,9 +24,9 @@ class Upload(models.Model):
         default=0,
         validators=[MinValueValidator(1)]
     )
-    tree_picture = ResizedImageField(size=[800, None], upload_to='images/uploads/%Y/%m/%d/')
-    tree_picture2 = ResizedImageField(size=[500, None], upload_to='images/uploads/%Y/%m/%d/', null=True, blank=True)
-    tree_picture3 = ResizedImageField(size=[500, None], upload_to='images/uploads/%Y/%m/%d/', null=True, blank=True)
+    tree_picture = ResizedImageField(size=[2048, None], upload_to='images/uploads/%Y/%m/')
+    tree_picture2 = ResizedImageField(size=[1920, None], upload_to='images/uploads/%Y/%m/', null=True, blank=True)
+    tree_picture3 = ResizedImageField(size=[1920, None], upload_to='images/uploads/%Y/%m/', null=True, blank=True)
 
     # def save(self, *args, **kwargs):
     #     if 'uploads/' not in self.tree_picture.url:

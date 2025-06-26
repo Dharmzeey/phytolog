@@ -7,7 +7,6 @@ User = settings.AUTH_USER_MODEL
 
 # THIS BELOW IS A PACKAGE THAT CONTAINS A FUNCTION THAT
 # I MANUALLY CREATE TO COMPRESS Images
-from utilities.compressor import compress
 
 
 class RequestTree(models.Model):
@@ -15,16 +14,8 @@ class RequestTree(models.Model):
     requester = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name="requester")
     location_name = models.CharField(max_length=100)
     location_description = models.TextField()
-    tree_picture = ResizedImageField(size=[800, None], upload_to='images/request/%Y/%m/%d')
-    tree_picture2 = ResizedImageField(size=[600, None], upload_to='images/request/%Y/%m/%d/', null=True, blank=True)
-    
-
-    # def save(self, *args, **kwargs):
-    #     new_image = compress(self.tree_picture)
-    #     self.tree_picture = new_image
-    #     new_image2 = compress(self.tree_picture2)
-    #     self.tree_picture2 = new_image2aa
-    #     super().save(*args, **kwargs)
+    tree_picture = ResizedImageField(size=[2048, None], upload_to='images/request/%Y/%m/')
+    tree_picture2 = ResizedImageField(size=[1920, None], upload_to='images/request/%Y/%m/', null=True, blank=True)
 
     coordinates = models.CharField(max_length=30)
     latitude = models.CharField(max_length=30)

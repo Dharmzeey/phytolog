@@ -5,7 +5,7 @@
 
 {% block title %}
 <title>
-  {{ tree_info.scientific_name }} | Trees in UI
+  {{ tree_info.scientific_name }} | Tree Database
 </title>
 {% endblock %}
 
@@ -37,11 +37,18 @@
           <li> Specie Status: {{ tree_info.specie_status }}</li>
 
           <li> Tree Description: {{ tree_info.tree_description }}</li>
-          <li>Tree Image: 
+          
+          
+          {% if tree_info.leaf_image %}
+          <li>
+            Tree Image:
             <div id="leaf_image">
-              <img src="{{ tree_info.leaf_image.url }}" alt="{{ tree_info }}">
+              <img src="{{ tree_info.leaf_image.url }}" alt="{{ tree_info }}" />
             </div>
           </li>
+          {% endif %}
+
+
 
           {% if tree_info.pharmacological_details %}
           <li class="font"> Pharmacological Details:
@@ -57,7 +64,7 @@
           <li class="font"> More About {{ tree_info }} ??:
             <span>
               <button class="read-more">
-                <a href="{{ tree_info.reference }}">Read Up</a>
+                <a href="{{ tree_info.reference }}" target="_blank">Read Up</a>
               </button>
             </span>
           </li>
@@ -88,11 +95,11 @@
           </div>
           <div class="social-link-item flex">
             <i class="fa-brands fa-telegram"></i>
-            {% post_to_telegram "Tree: {{tree_info.scientific_name}} at University of Ibadan" object_or_url "Telegram" %}
+            {% post_to_telegram "Tree: {{tree_info.scientific_name}} at Tree Database" object_or_url "Telegram" %}
           </div>
           <div class="social-link-item flex">
-            <i class="fa-brands fa-twitter"></i>
-            {% post_to_twitter "Tree: {{tree_info.scientific_name}} at University of Ibadan" object_or_url "Twitter" %}
+            <i class="fa-brands fa-x"></i>
+            {% post_to_twitter "Tree: {{tree_info.scientific_name}} at Tree Database" object_or_url "Twitter" %}
           </div>
           <div class="social-link-item flex">
             <i class="fa-brands fa-whatsapp"></i>
@@ -100,7 +107,7 @@
           </div>
           <div class="social-link-item flex">
             <i class="fa-solid fa-envelope"></i>
-            {% send_email "{{tree_info}} Tree" "Here is {{tree_info}} Tree found in University of Ibadan" object_or_url "Email" %}
+            {% send_email "{{tree_info}} Tree" "Here is {{tree_info}} Tree found in Tree Database" object_or_url "Email" %}
           </div>
           <div class="social-link-item flex">
             <i class="fa-brands fa-facebook"></i>

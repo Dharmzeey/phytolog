@@ -47,7 +47,7 @@ def run():
             tree_description='',
             reference=lk,
         )
-        tr.leaf_image = ImageFile(open(f'photos/{gs}.jpg', "rb"))
+        # tr.leaf_image = ImageFile(open(f'photos/{gs}.jpg', "rb"))
         tr.save()
         print(gs)
 

@@ -26,16 +26,16 @@ class CreateTree(AdminRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.uploaded_by = self.request.user
-        lat = form.instance.latitude
-        long = form.instance.longitude
-        check = validate_location(long, lat)
-        if check == False:
-            messages.error(self.request, "Sorry, You can not upload outside University of Ibadan")
-            return render(self.request, self.template_name, {'form': form})
-        else:
-            form.save()
-            messages.success(self.request, "Tree Uploaded Successfully")
-            return super(CreateTree, self).form_valid(form)
+        # lat = form.instance.latitude
+        # long = form.instance.longitude
+        # check = validate_location(long, lat)
+        # if check == False:
+        #     messages.error(self.request, "Sorry, You can not upload outside University of Ibadan")
+        #     return render(self.request, self.template_name, {'form': form})
+        # else:
+        form.save()
+        messages.success(self.request, "Tree Uploaded Successfully")
+        return super(CreateTree, self).form_valid(form)
     
 class UploadTreeRequest(AdminRequiredMixin, CreateView):
     form_class = UploadTreeForm
@@ -47,18 +47,18 @@ class UploadTreeRequest(AdminRequiredMixin, CreateView):
         request_id = RequestTree.objects.get(id=self.kwargs['pk'])
         form.instance.requested_by = request_id.requester
         
-        lat = form.instance.latitude
-        long = form.instance.longitude
-        check = validate_location(long, lat)
-        if check == False:
-            messages.success(self.request, "Sorry, You can not upload outside University of Ibadan")
-            return render(self.request, self.template_name, {'form': form})
-        else:        
-            form.save()
-            request_id.validated = True
-            request_id.save()
-            messages.success(self.request, "Tree Request Uploaded Successfully")
-            return super(UploadTreeRequest, self).form_valid(form)
+        # lat = form.instance.latitude
+        # long = form.instance.longitude
+        # check = validate_location(long, lat)
+        # if check == False:
+        #     messages.success(self.request, "Sorry, You can not upload outside University of Ibadan")
+        #     return render(self.request, self.template_name, {'form': form})
+        # else:        
+        form.save()
+        request_id.validated = True
+        request_id.save()
+        messages.success(self.request, "Tree Request Uploaded Successfully")
+        return super(UploadTreeRequest, self).form_valid(form)
 
 
 # class CreateFormTree(View):

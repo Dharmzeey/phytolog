@@ -1,63 +1,59 @@
 from .base import *
+from dotenv import load_dotenv
+load_dotenv()
 
-SECRET_KEY = os.environ.get('SECRET_KEY')
-DEBUG = False
 
-ALLOWED_HOSTS = ['uitrees.up.railway.app', "uitrees.olanrewajuadam.com.ng"]
+DEBUG = os.getenv('DEBUG', 'False').lower() in ('true', '1', 't')
+SECRET_KEY = os.getenv('SECRET_KEY')
 
-# THIS IS THE ONLY SITE THAT WILL ALLOW CSRF ACCESS
-# I CREATED IT MYSELF
-CSRF_TRUSTED_ORIGINS = ["https://uitrees.up.railway.app", "https://uitrees.olanrewajuadam.com.ng"]
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS').split(',')
+
+# CORS_ALLOWED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS').split(',')
+
+CORS_ALLOWED_ORIGINS = ['https://local-trees.dharmzeey.com']
+
+CSRF_TRUSTED_ORIGINS = ['https://local-trees.dharmzeey.com']
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ.get('PGDATABASE'),
-        'USER':os.environ.get('PGUSER'),
-        'PASSWORD':os.environ.get('PGPASSWORD'),
-        'HOST':os.environ.get('PGHOST'),
-        'PORT':os.environ.get('PGPORT')
-
+  'default': {
+    'ENGINE': 'django.db.backends.postgresql',
+    'NAME': os.getenv('DB_NAME'),
+    'USER': os.getenv('DB_USER'),
+    'PASSWORD': os.getenv('DB_PASSWORD'),
+    'HOST': os.getenv('DB_HOST'),
+    'PORT': os.getenv('DB_PORT'),
+  }
 }
-}
 
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'olanrewa_uitrees',
-#         'USER':'olanrewa_uitrees',
-#         'PASSWORD':']kvm=iY+mS0i',
-#         'HOST':'localhost',
-#         'PORT': 3306
-
+# CACHES = {
+#   'default': {
+#     'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+#     'LOCATION': 'kwise_cache_table',
+#     },
+#   'password_reset': {
+#     'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+#     'LOCATION': 'password_reset_cache_table',
+#   },
+#   'email_verification': {
+#       'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+#       'LOCATION': 'email_verification_cache_table',
+#     },
 # }
-# }
 
-# MEDIA_ROOT = '/home/olanrewa/uitrees_media/files/media'
-# STATIC_ROOT = '/home/olanrewa/uitrees_media/files/static'
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
-MEDIA_ROOT = '/home/olanrewa/uitrees_root/media'
-# STATIC_ROOT = '/home/olanrewa/uitrees_root/static'
-MEDIA_URL = '/media/'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_PORT = os.getenv('EMAIL_PORT')
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS')
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+
+
 STATIC_URL = '/static/'
-STATIC_ROOT=os.path.join(BASE_DIR,'assets')
+STATIC_ROOT = '/var/www/html/staticfiles'
+# STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
-
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-
-
-# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-
-# CLOUDINARY_STORAGE = {
-#     'CLOUD_NAME': os.environ.get('CLOUD_NAME'),
-#     'API_KEY': os.environ.get('API_KEY'),
-#     'API_SECRET': os.environ.get('API_SECRET'),
-# }
-# DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+MEDIA_URL = 'media/'
+MEDIA_ROOT = '/var/www/html/mediafiles'

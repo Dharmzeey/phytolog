@@ -10,9 +10,9 @@ ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS').split(',')
 
 # CORS_ALLOWED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS').split(',')
 
-CORS_ALLOWED_ORIGINS = ['https://local-trees.dharmzeey.com']
+CORS_ALLOWED_ORIGINS = ['https://tree-database.dharmzeey.com']
 
-CSRF_TRUSTED_ORIGINS = ['https://local-trees.dharmzeey.com']
+CSRF_TRUSTED_ORIGINS = ['https://tree-database.dharmzeey.com']
 
 DATABASES = {
   'default': {

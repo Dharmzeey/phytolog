@@ -6,28 +6,85 @@
 {% endblock %}
 {% block content %}
 
-<form method="post" action="" enctype="multipart/form-data">
-  {% csrf_token %}
-    <table>
-    {{ form.as_table }}
-    </table>
-    <button class="btn form-btn" type="submit">
-      Submit
-    </button>
-    <button onclick="window.location='{% url 'home:home' %}' ; return false;"  class="btn form-btn" type="submit">
-      Cancel
-    </button>
-  <!-- <input type="submit" value="Submit"> -->
-</form>
+<div class="form-container">
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title">Request Tree Identification</h2>
+      <p class="text-muted">Can't find a tree? Request help from our experts</p>
+    </div>
+    
+    <form method="post" action="" enctype="multipart/form-data">
+      {% csrf_token %}
+      
+      {% for field in form %}
+      <div class="form-group">
+        <label for="{{ field.id_for_label }}" class="form-label">
+          {{ field.label }}
+          {% if field.field.required %}<span style="color: var(--gray-300);">*</span>{% endif %}
+        </label>
+        
+        {% if field.field.widget.input_type == 'textarea' %}
+        <textarea name="{{ field.name }}" id="{{ field.id_for_label }}" class="form-input" 
+                  {% if field.field.required %}required{% endif %}
+                  placeholder="{{ field.help_text|default:'' }}">{{ field.value|default:'' }}</textarea>
+        {% elif field.field.widget.input_type == 'file' %}
+        <input type="file" name="{{ field.name }}" id="{{ field.id_for_label }}" class="form-input"
+               {% if field.field.required %}required{% endif %}
+               accept="image/*" />
+        {% else %}
+        <input type="{{ field.field.widget.input_type|default:'text' }}" 
+               name="{{ field.name }}" 
+               id="{{ field.id_for_label }}" 
+               class="form-input"
+               value="{{ field.value|default:'' }}"
+               {% if field.field.required %}required{% endif %}
+               placeholder="{{ field.help_text|default:'' }}" />
+        {% endif %}
+        
+        {% if field.errors %}
+        <div class="error-message mt-2">
+          {% for error in field.errors %}
+          <p>{{ error }}</p>
+          {% endfor %}
+        </div>
+        {% endif %}
+        
+        {% if field.help_text %}
+        <p class="text-muted text-sm mt-2">{{ field.help_text }}</p>
+        {% endif %}
+      </div>
+      {% endfor %}
+      
+      <div class="flex gap-4 mt-8">
+        <button type="submit" class="btn btn-primary">Submit Request</button>
+        <a href="{% url 'home:home' %}" class="btn btn-secondary">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
 
 <script>
-  var x = document.getElementById("id_coordinates");
-  var y = document.getElementById("id_latitude");
-  var z = document.getElementById("id_longitude");
-
-x.readOnly = true;
-y.readOnly = true;
-z.readOnly = true;
+  // Auto-populate coordinates
+  const coordinatesField = document.getElementById("id_coordinates");
+  const latitudeField = document.getElementById("id_latitude");
+  const longitudeField = document.getElementById("id_longitude");
+  
+  if (coordinatesField && latitudeField && longitudeField) {
+    coordinatesField.readOnly = true;
+    latitudeField.readOnly = true;
+    longitudeField.readOnly = true;
+    
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        
+        coordinatesField.value = lat + ',' + lng;
+        latitudeField.value = lat;
+        longitudeField.value = lng;
+      });
+    }
+  }
 </script>
 
-{% endblock  %}
+{% endblock %}

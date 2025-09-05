@@ -27,22 +27,14 @@
       content="https://local-trees.dharmzeey.com/static/icons/icon_tree.png"
     />
 
-    <link
-      href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css"
-      rel="stylesheet"
-    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Readex+Pro&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
     />
 
-    <link rel="stylesheet" href="{% static 'styles/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'styles/modern.css' %}" />
     <link
       rel="shortcut icon"
       href="{% static 'icons/icon_tree.png' %}"
@@ -55,113 +47,81 @@
 
   <body>
     {% if messages %}
-    <div style="position: relative" id="pop-up">
-      <ul class="message">
+    <div class="message" id="pop-up">
         {% for message in messages %}
-        <li>{{ message }}</li>
+        <div>{{ message }}</div>
         {% endfor %}
-      </ul>
     </div>
     {% endif %}
 
     <header class="header">
       <div class="container">
-        <nav>
-          <div class="flex">
-            <a href="{% url 'home:home' %}" class="center heading">
-              <b class="center heading">TREE DATABASE</b>
-            </a>
-            <button
-              class="btn place-items-center screen-lg-hidden menu-toggle-icon"
-              id="menu-toggle-icon"
-            >
-              <i
-                class="ri-menu-3-line open-menu-icon toggle"
-                id="open-menu"
-              ></i>
-              <i
-                class="ri-close-line close-menu-icon toggle"
-                id="close-menu"
-              ></i>
-            </button>
-          </div>
-          <div class="flex">
-            <a href="{{ request.META.HTTP_REFERER }}">BACK</a>
-            <a href="{% url 'home:home' %}">HOME</a>
-          </div>
-        </nav>
-
-        <aside id="aside" class="menu">
-          {% if request.user.is_authenticated %}
-          <div class="user-pic">
-            <a href="{% url 'user:update' %}">
-              <img src="{{ request.user.picture.url }}" alt="profile" />
-            </a>
-            <p>Profile</p>
-          </div>
-          {% endif %}
-
-          <ul class="flex">
-            <li>
-              <button class="btn place-items-center" id="theme-toggle-btn">
-                <i class="ri-sun-line sun-icon"></i>
-                <i class="ri-moon-line moon-icon"></i>
-              </button>
-            </li>
-            <li>
-              <a href="{% url 'home:acknowledgement' %}">Acknowledgement</a>
-            </li>
-            <li><a href="{% url 'home:contributors' %}">Contributors</a></li>
-            <li><a href="{% url 'special:special' %}">Special Places</a></li>
-            <li><a href="{% url 'home:tree_album' %}">Tree Album</a></li>
-            <li><a href="{% url 'home:how_to_use' %}">How to use</a></li>
-            <li><a href="{% url 'treerequest:treerequest' %}">Request</a></li>
-            <li><a href="{% url 'home:about' %}">About</a></li>
-
-            {% if request.user.is_authenticated and request.user.is_staff %}
-            <li>
-              <a href="{% url 'treerequest:requests' %}">View Requests</a>
-            </li>
-            <li id="upload_options">
-              <a href="{% url 'upload:upload' %}">
-                Upload Tree <span id="demarcate"> &nbsp;|&nbsp;</span></a
-              >
-              <a href="{% url 'special:upload' %}"> Upload Special </a>
-            </li>
-            {% endif %} {% if request.user.is_authenticated %}
-            <li><a href="{% url 'logout' %}">Logout</a> {% else %}</li>
-
-            <li><a href="{% url 'user:login' %}">Login</a></li>
+        <div class="header-content">
+          <a href="{% url 'home:home' %}" class="logo">
+            TREE DATABASE
+          </a>
+          
+          <button class="menu-toggle" id="menu-toggle">
+            <span id="menu-icon">☰</span>
+            <span id="close-icon" class="hidden">✕</span>
+          </button>
+          
+          <nav class="nav-menu" id="nav-menu">
+            {% if request.user.is_authenticated %}
+            <div class="user-profile">
+              <img src="{{ request.user.picture.url }}" alt="Profile" class="user-avatar" />
+              <span>{{ request.user.username }}</span>
+            </div>
             {% endif %}
-          </ul>
-        </aside>
+            
+            <ul>
+              <li><a href="{% url 'home:home' %}">Home</a></li>
+              <li><a href="{% url 'home:acknowledgement' %}">Acknowledgement</a></li>
+              <li><a href="{% url 'home:contributors' %}">Contributors</a></li>
+              <li><a href="{% url 'special:special' %}">Special Places</a></li>
+              <li><a href="{% url 'home:tree_album' %}">Tree Album</a></li>
+              <li><a href="{% url 'home:how_to_use' %}">How to Use</a></li>
+              <li><a href="{% url 'treerequest:treerequest' %}">Request</a></li>
+              <li><a href="{% url 'home:about' %}">About</a></li>
+              
+              {% if request.user.is_authenticated and request.user.is_staff %}
+              <li><a href="{% url 'treerequest:requests' %}">View Requests</a></li>
+              <li><a href="{% url 'upload:upload' %}">Upload Tree</a></li>
+              <li><a href="{% url 'special:upload' %}">Upload Special</a></li>
+              {% endif %}
+              
+              {% if request.user.is_authenticated %}
+              <li><a href="{% url 'user:update' %}">Profile</a></li>
+              <li><a href="{% url 'logout' %}">Logout</a></li>
+              {% else %}
+              <li><a href="{% url 'user:login' %}">Login</a></li>
+              <li><a href="{% url 'user:register' %}">Register</a></li>
+              {% endif %}
+            </ul>
+          </nav>
+        </div>
       </div>
     </header>
 
-    <div class="flex page-content">
-      <div>
-        <div class="base-block-content">{% block content %} {% endblock %}</div>
+    <main class="main-content">
+      <div class="container">
+        {% block content %}
+        {% endblock %}
       </div>
+    </main>
 
-      <footer id="base-footer">
-        <section id="section-count">
-          <div>
-            <small>
-              <span>Total Inventory as at: </span>
-              <span id="inventory">{{ request.session.time }}</span>
-              <span>are:</span>
-              <span>{{ request.session.counter }}</span>
-              <span>Trees</span>
-            </small>
-          </div>
-        </section>
-      </footer>
-    </div>
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-content">
+          {% if request.user.is_authenticated %}
+          <p>Total Inventory as at: {{ request.session.time }} - {{ request.session.counter }} Trees</p>
+          {% else %}
+          <p>&copy; 2025 Tree Database. All rights reserved.</p>
+          {% endif %}
+        </div>
+      </div>
+    </footer>
 
-    <script
-      type="text/javascript"
-      src="{% static 'js/Dharmzeey.js' %}"
-    ></script>
-    <script type="text/javascript" src="{% static 'js/script.js' %}"></script>
+    <script src="{% static 'js/modern.js' %}"></script>
   </body>
 </html>

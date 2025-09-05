@@ -1,6 +1,5 @@
 {% extends 'base/base.html' %}
 {% load static %}
-{% load social_share %}
 {% block content %}
 
 {% block title %}
@@ -9,172 +8,132 @@
 </title>
 {% endblock %}
 
-<div class="flex-container">
-  <div class="detail-container" id="detail-container" style="display: block;">
-    <div>
-      <div id="pic_cont" style="display: none;">
-        <h2 id="picture_title" style="font-size: 2rem;"></h2>
-        <iframe name="my_frame" id="my_frame" frameborder="0" seamless></iframe>
+<div class="tree-details">
+  <div class="tree-info">
+    <h1 class="tree-title">{{ tree_info.scientific_name }}</h1>
+    
+    {% if tree_info.leaf_image %}
+    <img src="{{ tree_info.leaf_image.url }}" alt="{{ tree_info }}" class="tree-image mb-6" />
+    {% endif %}
+    
+    <div class="tree-meta">
+      {% if tree_info.common_name and tree_info.common_name != '------' %}
+      <div class="meta-item">
+        <span class="meta-label">Common Name</span>
+        <span class="meta-value">{{ tree_info.common_name }}</span>
       </div>
-
-
-      <div>
-        <h2 class="heading">{{ tree_info.scientific_name }} </h2>
-        <ul class="flex tree-details">
-
-          <li> Common Name: {{ tree_info.common_name }}</li>
-
-          <li> Local Name: {{ tree_info.local_name }}</li>
-
-          <li> Authority: {{ tree_info.authority }}</li>
-
-          <li> Order: {{ tree_info.tree_order }}</li>
-
-          <li> Family: {{ tree_info.tree_family }}</li>
-
-          <li> Conservation Status: {{ tree_info.conservation_status }}</li>
-
-          <li> Specie Status: {{ tree_info.specie_status }}</li>
-
-          <li> Tree Description: {{ tree_info.tree_description }}</li>
-          
-          
-          {% if tree_info.leaf_image %}
-          <li>
-            Tree Image:
-            <div id="leaf_image">
-              <img src="{{ tree_info.leaf_image.url }}" alt="{{ tree_info }}" />
-            </div>
-          </li>
-          {% endif %}
-
-
-
-          {% if tree_info.pharmacological_details %}
-          <li class="font"> Pharmacological Details:
-            <span>
-              <button class="read-more">
-                <a href="{% url 'home:pharmacology' tree_info.id %}">Read Up</a>
-              </button>
-            </span>
-          </li>
-          {% endif %}
-
-          {% if tree_info.reference %}
-          <li class="font"> More About {{ tree_info }} ??:
-            <span>
-              <button class="read-more">
-                <a href="{{ tree_info.reference }}" target="_blank">Read Up</a>
-              </button>
-            </span>
-          </li>
-          {% endif %}
-        </ul>
-
-      </div>
-    </div>
-
-    <div>
-      <div class="search-result">
-        <div class="heading">Places Found</div>
-        <ul class="places-found flex">
-          {% for location in tree_location %}
-          <li>
-            <a class="block" href="{% url 'home:tree_picture' location.id %}" target="my_frame" onclick="displayIframe(this)"> {{ location }} </a>
-          </li>
-          {% endfor %}
-        </ul>
-      </div>
+      {% endif %}
       
-      <div>
-        SHARE PAGE
-        <div class="social-links flex">
-          <div class="social-link-item flex">
-            <i class="fa-brands fa-linkedin"></i>
-            {% post_to_linkedin object_or_url %}
-          </div>
-          <div class="social-link-item flex">
-            <i class="fa-brands fa-telegram"></i>
-            {% post_to_telegram "Tree: {{tree_info.scientific_name}} at Tree Database" object_or_url "Telegram" %}
-          </div>
-          <div class="social-link-item flex">
-            <i class="fa-brands fa-x"></i>
-            {% post_to_twitter "Tree: {{tree_info.scientific_name}} at Tree Database" object_or_url "Twitter" %}
-          </div>
-          <div class="social-link-item flex">
-            <i class="fa-brands fa-whatsapp"></i>
-            {% post_to_whatsapp object_or_url "WhatsApp" %}
-          </div>
-          <div class="social-link-item flex">
-            <i class="fa-solid fa-envelope"></i>
-            {% send_email "{{tree_info}} Tree" "Here is {{tree_info}} Tree found in Tree Database" object_or_url "Email" %}
-          </div>
-          <div class="social-link-item flex">
-            <i class="fa-brands fa-facebook"></i>
-            {% post_to_facebook object_or_url "Facebook" %}
-          </div>
-          <!-- <div class="social-link-item flex">
-          <i class="fa-brands fa-pinterest"></i>
-          {% save_to_pinterest object_or_url "Pinterest" %}
-        </div> -->
-          <!-- <div class="social-link-item flex">
-        <i class="fa-solid fa-clipboard"></i>
-        {% copy_to_clipboard object_or_url "Copy" %}
-        {% add_copy_script %}
-        </div> -->
-        </div>
-
-      <!--PAGINATOR CONTROL STARTS HERE-->
-      <div class="paginator">
-        {% if tree_location.has_other_pages %}
-        <ul class="pagination flex">
-          {% if tree_location.has_previous %}
-          <li class="page-item">
-            <a class="page-link" href="?page={{ 1 }}">First</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link" href="?page={{ tree_location.previous_page_number }}">&laquo;</a>
-          </li>
-          {% else %}
-          <li class="disabled"><span>&laquo;</span></li>
-          {% endif %}
-
-          {% for i in tree_location.paginator.page_range %}
-          {% if tree_location.number == i %}
-          <li class="page-item active-page"><a class="page-link">{{ i }}</a></li>
-          {% else %}
-          <li class="page-item">
-            <a class="page-link" href="?page={{ i }}">{{ i }}</a>
-          </li>
-          {% endif %}
-          {% endfor %}
-
-
-          {% if tree_location.has_next %}
-          <li class="page-item">
-            <a class="page-link" href="?page={{ tree_location.next_page_number }}">&raquo;</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link" href="?page={{ tree_location.paginator.num_pages }}">Last</a>
-          </li>
-          {% else %}
-          <li class="disabled"><span>&raquo;</span></li>
-          {% endif %}
-        </ul>
-
-        {% endif %}
-
+      {% if tree_info.local_name and tree_info.local_name != '------' %}
+      <div class="meta-item">
+        <span class="meta-label">Local Name</span>
+        <span class="meta-value">{{ tree_info.local_name }}</span>
       </div>
-      <!--PAGINATOR CONTROL ENDS HERE-->
+      {% endif %}
+      
+      {% if tree_info.authority %}
+      <div class="meta-item">
+        <span class="meta-label">Authority</span>
+        <span class="meta-value">{{ tree_info.authority }}</span>
+      </div>
+      {% endif %}
+      
+      {% if tree_info.tree_order %}
+      <div class="meta-item">
+        <span class="meta-label">Order</span>
+        <span class="meta-value">{{ tree_info.tree_order }}</span>
+      </div>
+      {% endif %}
+      
+      {% if tree_info.tree_family %}
+      <div class="meta-item">
+        <span class="meta-label">Family</span>
+        <span class="meta-value">{{ tree_info.tree_family }}</span>
+      </div>
+      {% endif %}
+      
+      {% if tree_info.conservation_status %}
+      <div class="meta-item">
+        <span class="meta-label">Conservation Status</span>
+        <span class="meta-value">{{ tree_info.conservation_status }}</span>
+      </div>
+      {% endif %}
+      
+      {% if tree_info.specie_status %}
+      <div class="meta-item">
+        <span class="meta-label">Species Status</span>
+        <span class="meta-value">{{ tree_info.specie_status }}</span>
+      </div>
+      {% endif %}
     </div>
-
+    
+    {% if tree_info.tree_description %}
+    <div class="mt-6">
+      <h3 class="mb-4">Description</h3>
+      <p>{{ tree_info.tree_description }}</p>
+    </div>
+    {% endif %}
+    
+    <div class="flex gap-4 mt-6">
+      {% if tree_info.pharmacological_details %}
+      <a href="{% url 'home:pharmacology' tree_info.id %}" class="btn btn-primary">
+        Pharmacological Details
+      </a>
+      {% endif %}
+      
+      {% if tree_info.reference %}
+      <a href="{{ tree_info.reference }}" target="_blank" class="btn btn-secondary">
+        Learn More
+      </a>
+      {% endif %}
+    </div>
   </div>
 
-  <div id="time-created-updated">
-    <p>This page was created on: {{ tree_info.created }} and last updated on: {{ tree_info.last_updated }}</p>
+  <div class="locations-section">
+    <h2 class="mb-6">Locations Found</h2>
+    <div class="locations-grid">
+      {% for location in tree_location %}
+      <a href="{% url 'home:tree_picture' location.id %}" class="location-item" target="_blank">
+        {{ location.location_name }}
+        <p class="text-muted text-sm mt-2">{{ location.tree_count }} tree{{ location.tree_count|pluralize }}</p>
+      </a>
+      {% endfor %}
+    </div>
+    
+    <!-- Pagination for locations -->
+    {% if tree_location.has_other_pages %}
+    <div class="pagination mt-8">
+      {% if tree_location.has_previous %}
+      <a href="?page=1">First</a>
+      <a href="?page={{ tree_location.previous_page_number }}">&laquo;</a>
+      {% else %}
+      <span>&laquo;</span>
+      {% endif %}
+
+      {% for i in tree_location.paginator.page_range %}
+        {% if tree_location.number == i %}
+        <span class="active-page">{{ i }}</span>
+        {% else %}
+        <a href="?page={{ i }}">{{ i }}</a>
+        {% endif %}
+      {% endfor %}
+
+      {% if tree_location.has_next %}
+      <a href="?page={{ tree_location.next_page_number }}">&raquo;</a>
+      <a href="?page={{ tree_location.paginator.num_pages }}">Last</a>
+      {% else %}
+      <span>&raquo;</span>
+      {% endif %}
+    </div>
+    {% endif %}
   </div>
 </div>
 
-
+<div class="card mt-8">
+  <p class="text-muted text-sm">
+    Created: {{ tree_info.created|date:"F d, Y" }} | 
+    Last updated: {{ tree_info.last_updated|date:"F d, Y" }}
+  </p>
+</div>
 
 {% endblock %}

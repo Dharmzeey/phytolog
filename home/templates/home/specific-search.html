@@ -7,111 +7,104 @@
 
 {% block content %}
 
-<ul class="search-options flex">
+<div class="search-options">
   {% for search in search_options %}
-  <li>
-    <a class="block" href="{% url 'home:specific_search' search.id %}">{{ search }}</a>
-  </li>
+  <a href="{% url 'home:specific_search' search.id %}" class="search-option">
+    <h3>{{ search.name }}</h3>
+    <p class="text-muted">Search by {{ search.name|lower }}</p>
+  </a>
   {% endfor %}
-</ul>
+</div>
 
-<div class="form-container">
-  <form action="" method="">
-    <input name="q" type="text" id="dynamic" placeholder="Input " />
-    <button style="display: none;" id="inp_cord" class="btn form-btn" type="submit">
-      <i class="ri-search-line"></i>
+<div class="search-container">
+  <form action="" method="GET">
+    <input name="q" type="text" id="dynamic" placeholder="Enter search term..." class="search-input" />
+    <button style="display: none;" id="inp_cord" class="btn btn-primary" type="submit">
+      Search
     </button>
-    <!-- <input style="display: none;" id="inp_cord" type="submit" value="Search"> -->
   </form>
 </div>
 
-<span id="flag" style="display: none; color:red; font-size: 1.2rem;">For location search, please add just a specific input <br> </span>
+<div id="flag" class="error-message" style="display: none;">
+  For location search, please add just a specific input
+</div>
 
-<div class="search-result">
+<div class="results-container">
   {% if search_tree %}
-  <div class="result-counter">{{ search_result.paginator.count }} Result{{ search_result.paginator.count|pluralize }} Available </div>
-  <ul class="flex">
+  <div class="results-count">{{ search_result.paginator.count }} result{{ search_result.paginator.count|pluralize }} found</div>
+  <div class="results-grid">
     {% for tree in search_result %}
-    <li><a href="{% url 'home:tree_details' tree.id %}">{{ tree }}</a></li>
+    <a href="{% url 'home:tree_details' tree.id %}" class="result-item">
+      <h3>{{ tree.scientific_name }}</h3>
+      {% if tree.common_name and tree.common_name != '------' %}
+      <p class="text-muted">{{ tree.common_name }}</p>
+      {% endif %}
+    </a>
     {% endfor %}
-  </ul>
+  </div>
   {% endif %}
 
-
   {% if search_place %}
-  <div> <b>{{ search_result.paginator.count }} Result{{ search_result.paginator.count|pluralize }} Available</b> </div>
-  <ul class="flex">
+  <div class="results-count">{{ search_result.paginator.count }} result{{ search_result.paginator.count|pluralize }} found</div>
+  <div class="results-grid">
     {% for tree in search_result %}
-    <li><a href="{% url 'home:tree_location_details' tree.id %}">{{ tree }}</a></li>
+    <a href="{% url 'home:tree_location_details' tree.id %}" class="result-item">
+      <h3>{{ tree.tree_name.scientific_name }}</h3>
+      <p class="text-muted">at {{ tree.location_name }}</p>
+    </a>
     {% endfor %}
-  </ul>
+  </div>
   {% endif %}
 
   {% if search_coord %}
-  <small>
-    Here are the trees that are likely to be around your vicinity
-  </small>
-  <div> <b>{{ search_result.paginator.count }} Result{{ search_result.paginator.count|pluralize }} Available</b> </div>
-  <ul class="flex">
+  <p class="text-muted mb-4">Trees likely to be around your vicinity</p>
+  <div class="results-count">{{ search_result.paginator.count }} result{{ search_result.paginator.count|pluralize }} found</div>
+  <div class="results-grid">
     {% for tree in search_result %}
-    <li><a href="{% url 'home:tree_location_details' tree.id %}">{{ tree }}</a></li>
-  </ul>
+    <a href="{% url 'home:tree_location_details' tree.id %}" class="result-item">
+      <h3>{{ tree.tree_name.scientific_name }}</h3>
+      <p class="text-muted">at {{ tree.location_name }}</p>
+    </a>
+    {% endfor %}
+  </div>
   {% endfor %}
   {% endif %}
 
   {% if search_error %}
-  <span style="color: red;">{{ search_error }}</span>
+  <div class="error-message">{{ search_error }}</div>
   {% endif %}
 </div>
 
-<!--PAGINATOR CONTROL STARTS HERE-->
-<div class="paginator">
+<!-- Pagination -->
   {% if search_result.has_other_pages %}
-  <ul class="pagination flex">
+  <div class="pagination">
     {% if search_result.has_previous %}
-    <li class="page-item">
-      <a class="page-link" href="?{% if search %}q={{ search }}&{% endif %}page={{ 1 }}">First</a>
-    </li>
-    <li class="page-item">
-      <a class="page-link" href="?{% if search %}q={{ search }}&{% endif %}page={{ search_result.previous_page_number }}">&laquo;</a>
-    </li>
+    <a href="?{% if search %}q={{ search }}&{% endif %}page=1">First</a>
+    <a href="?{% if search %}q={{ search }}&{% endif %}page={{ search_result.previous_page_number }}">&laquo;</a>
     {% else %}
-    <li class="disabled"><span>&laquo;</span></li>
+    <span>&laquo;</span>
     {% endif %}
 
     {% for i in search_result.paginator.page_range %}
-    {% if search_result.number == i %}
-    <li class="page-item active-page"><a class="page-link">{{ i }}</a></li>
-    {% else %}
-    <li class="page-item">
-      <a class="page-link" href="?{% if search %}q={{ search }}&{% endif %}page={{ i }}">{{ i }}</a>
-    </li>
-    {% endif %}
+      {% if search_result.number == i %}
+      <span class="active-page">{{ i }}</span>
+      {% else %}
+      <a href="?{% if search %}q={{ search }}&{% endif %}page={{ i }}">{{ i }}</a>
+      {% endif %}
     {% endfor %}
 
-
     {% if search_result.has_next %}
-    <li class="page-item">
-      <a class="page-link" href="?{% if search %}q={{ search }}&{% endif %}page={{ search_result.next_page_number }}">&raquo;</a>
-    </li>
-    <li class="page-item">
-      <a class="page-link" href="?{% if search %}q={{ search }}&{% endif %}page={{ search_result.paginator.num_pages }}">Last </a>
-    </li>
+    <a href="?{% if search %}q={{ search }}&{% endif %}page={{ search_result.next_page_number }}">&raquo;</a>
+    <a href="?{% if search %}q={{ search }}&{% endif %}page={{ search_result.paginator.num_pages }}">Last</a>
     {% else %}
-    <li class="disabled"><span>&raquo;</span></li>
+    <span>&raquo;</span>
     {% endif %}
-  </ul>
-
+  </div>
   {% endif %}
 
-</div>
-<!--PAGINATOR CONTROL ENDS HERE-->
-
 <script>
-
   var dynamic_input = document.getElementById("dynamic");
   const flag = document.getElementById("flag");
   var result = 'Search by {{ search_item.name }}';
-
 </script>
 {% endblock %}

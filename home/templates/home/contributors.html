@@ -7,91 +7,79 @@
 
 {% block content %}
 
-<h2 class="center">Contributors</h2>
+<h1 class="text-center mb-8">Contributors</h1>
 
-<div id="contributor-container">
+<div class="contributors-grid">
   {% for contributor in uploaders %}
-
-  <div id="{{ contributor.user.username }}">
-    <div class="contributor-center-profile">
-      <div class="picture-container">
-        <img src="{{ contributor.picture.url }}" alt=" {{ contributor.name }}'s Picture">
-      </div>
-      <h5> {{ contributor.username }} </h5>
-      <p> {{ contributor.first_name }} {{ contributor.last_name }} </p>
-
-      <!-- SOCIAL LINKS -->
-      <div class="social">
-        <ul class="flex">
-          {% if contributor.email %}
-          <li class="list-item">
-            <a target="_blank" class="list-link" href="mailto:{{ contributor.email }}"><i class="ri-mail-line"></i></a>
-          </li>
-          {% endif %}
-
-          {% if contributor.tel %}
-          <li class="list-item">
-            <a target="_blank" class="list-link" href="tel:{{ contributor.tel }}"><i class="ri-phone-line"></i></a>
-          </li>
-          {% endif %}
-
-          {% if contributor.website %}
-          <li class="list-item">
-            <a target="_blank" class="list-link" href="{{ contributor.website }}"><i class="ri-links-line"></i></a>
-          </li>
-          {% endif %}
-
-          {% if contributor.git_link %}
-          <li class="list-item">
-            <a target="_blank" class="list-link" href="{{ contributor.git_link }}"><i class="ri-github-line"></i></a>
-          </li>
-          {% endif %}
-
-          {% if contributor.tw_link %}
-          <li class="list-item">
-            <a target="_blank" class="list-link" href="{{ contributor.tw_link }}"><i class="ri-twitter-x-line"></i></a>
-          </li>
-          {% endif %}
-
-          {% if contributor.ig_link %}
-          <li class="list-item">
-            <a target="_blank" class="list-link" href="{{ contributor.ig_link }}"><i class="ri-instagram-line"></i></a>
-          </li>
-          {% endif %}
-
-          {% if contributor.fblink %}
-          <li class="list-item">
-            <a target="_blank" class="list-link" href="{{ contributor.fb_link }}"><i class="ri-facebook-circle-line"></i></a>
-          </li>
-          {% endif %}
-        </ul>
-      </div>
-    </div>
-
+  <div class="contributor-card" id="{{ contributor.username }}">
+    <img src="{{ contributor.picture.url }}" alt="{{ contributor.username }}" class="contributor-avatar" />
+    <h3 class="contributor-name">{{ contributor.first_name }} {{ contributor.last_name }}</h3>
+    <p class="contributor-username">@{{ contributor.username }}</p>
+    
     {% if contributor.about %}
-    <p> {{ contributor.about }} </p>
+    <p class="text-secondary mb-4">{{ contributor.about }}</p>
     {% endif %}
+    
+    <div class="social-links">
+      {% if contributor.email %}
+      <a href="mailto:{{ contributor.email }}" class="social-link" title="Email">
+        ✉
+      </a>
+      {% endif %}
+      
+      {% if contributor.tel %}
+      <a href="tel:{{ contributor.tel }}" class="social-link" title="Phone">
+        ☎
+      </a>
+      {% endif %}
+      
+      {% if contributor.website %}
+      <a href="{{ contributor.website }}" target="_blank" class="social-link" title="Website">
+        🌐
+      </a>
+      {% endif %}
+      
+      {% if contributor.git_link %}
+      <a href="{{ contributor.git_link }}" target="_blank" class="social-link" title="GitHub">
+        ⚡
+      </a>
+      {% endif %}
+      
+      {% if contributor.tw_link %}
+      <a href="{{ contributor.tw_link }}" target="_blank" class="social-link" title="Twitter">
+        🐦
+      </a>
+      {% endif %}
+      
+      {% if contributor.ig_link %}
+      <a href="{{ contributor.ig_link }}" target="_blank" class="social-link" title="Instagram">
+        📷
+      </a>
+      {% endif %}
+      
+      {% if contributor.fb_link %}
+      <a href="{{ contributor.fb_link }}" target="_blank" class="social-link" title="Facebook">
+        📘
+      </a>
+      {% endif %}
+    </div>
   </div>
-  <br>
   {% endfor %}
 </div>
 
 {% if requesters %}
-<br><br>
-<div>
-  <h2 class="center">Requesters</h2>
-  <div class="requester-container">
+<div class="mt-12">
+  <h2 class="text-center mb-8">Requesters</h2>
+  <div class="contributors-grid">
     {% for contributor in requesters %}
-    <a href="{% url 'user:requester_details' contributor.id %}">
-      <div class="requester-info">
-        <div><img src="{{ contributor.picture.url }}" alt="{{ contributor }}"></div>
-        <p>{{ contributor }}</p>
-      </div>
+    <a href="{% url 'user:requester_details' contributor.id %}" class="contributor-card">
+      <img src="{{ contributor.picture.url }}" alt="{{ contributor }}" class="contributor-avatar" />
+      <h3 class="contributor-name">{{ contributor.first_name }} {{ contributor.last_name }}</h3>
+      <p class="contributor-username">@{{ contributor.username }}</p>
     </a>
     {% endfor %}
   </div>
 </div>
 {% endif %}
-
 
 {% endblock %}

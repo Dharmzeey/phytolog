@@ -1,20 +1,19 @@
-{% extends 'base/base.html' %}
-{% block title %}
-<title>
-  Tree Album | Tree Database
-</title>
-{% endblock %}
+{% extends 'base/base.html' %} {% block title %}
+<title>Tree Album | Tree Database</title>
+{% endblock %} {% block content %}
 
-{% block content %}
-
-<h1 class="text-center mb-8">Tree Album</h1>
+<h1 class="text-center mb-2">Tree Album</h1>
 <p class="text-center text-muted mb-8">A collection of our documented trees</p>
 
 {% if uploads %}
 <div class="album-grid">
   {% for tree in uploads %}
   <a href="{% url 'home:tree_details' tree.tree_name.id %}" class="album-item">
-    <img src="{{ tree.tree_picture.url }}" alt="{{ tree.tree_name }}" class="album-image" />
+    <img
+      src="{{ tree.tree_picture.url }}"
+      alt="{{ tree.tree_name }}"
+      class="album-image"
+    />
     <div class="album-caption">
       <h4>{{ tree.tree_name.scientific_name }}</h4>
       <p class="text-muted">{{ tree.location_name }}</p>
@@ -27,14 +26,4 @@
   <h3>No trees in album yet</h3>
   <p class="text-muted">Check back later for tree photos</p>
 </div>
-{% endif %}
-
-{% endblock %}
-
-    </a>
-  </div>
-  {% endfor %}
-</div>
-{% endif %}
-
-{% endblock %}
+{% endif %} {% endblock %}

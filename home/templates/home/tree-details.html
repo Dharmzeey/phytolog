@@ -10,7 +10,7 @@
 
 <div class="tree-details">
   <div class="tree-info">
-    <h1 class="tree-title">{{ tree_info.scientific_name }}</h1>
+    <h1 class="tree-title"><i>{{ tree_info.scientific_name }}</i></h1>
     
     {% if tree_info.leaf_image %}
     <img src="{{ tree_info.leaf_image.url }}" alt="{{ tree_info }}" class="tree-image mb-6" />
@@ -95,7 +95,7 @@
       {% for location in tree_location %}
       <a href="{% url 'home:tree_picture' location.id %}" class="location-item" target="_blank">
         {{ location.location_name }}
-        <p class="text-muted text-sm mt-2">{{ location.tree_count }} tree{{ location.tree_count|pluralize }}</p>
+        {% comment %} <p class="text-muted text-sm mt-2">{{ location.tree_count }} tree{{ location.tree_count|pluralize }}</p> {% endcomment %}
       </a>
       {% endfor %}
     </div>
